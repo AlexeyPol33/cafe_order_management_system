@@ -7,7 +7,8 @@ class Meal(models.Choices):
         indexes = [models.Index(fields=['id'])]
     name = models.CharField(
         max_length=200,
-        verbose_name='Название')
+        verbose_name='Название',
+        unique=True)
     description = models.TextField(
         blank=True,
         null=True)
