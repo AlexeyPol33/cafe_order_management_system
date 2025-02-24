@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Meal(models.Choices):
+class Meal(models.Model):
     class Meta:
         verbose_name='Меню'
         indexes = [models.Index(fields=['id'])]
@@ -11,7 +11,8 @@ class Meal(models.Choices):
         unique=True)
     description = models.TextField(
         blank=True,
-        null=True)
+        null=True,
+        verbose_name='Описание')
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -34,7 +35,7 @@ class Order(models.Model):
     items = models.ManyToManyField(
         to=Meal,
         related_name='orders',
-        through='order_meal')
+        through='OrderMeal')
     status = models.CharField(
         max_length=4,
         choices=Status.choices,
@@ -43,4 +44,10 @@ class Order(models.Model):
     @property
     def total_price(self):
         prices = [item.price for item in self.items.all()]
-        return  sum(prices)
+        return sum(prices)
+
+
+class OrderMeal(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
