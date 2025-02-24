@@ -36,18 +36,44 @@ class MealSerializer(serializers.ModelSerializer):
                 code=400)
         return price
 
-    def create(self, validated_data:dict):
+    def create(self, validated_data):
         self.validate_name(validated_data.get('name',None))
         self.validate_price(validated_data.get('price'))
-
         return super().create(validated_data)
-    
+
     def update(self, instance, validated_data):
         instance.name = self.validate_name(validated_data.get('name',None))
         instance.price = self.validate_name(validated_data.get('price',None))
         return super().update(instance, validated_data)
-    
+
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'table_number', 'items', 'total_price', 'status']
+
+    def validate_table_number(self, table_number):
+        if table_number is None:
+            raise ValidationError(
+                'table_name parameter is required',
+                code=400)
+        return table_number
+
+    def validate_items(self, items):
+        return items
+
+    def validate_status(self, status):
+        return status
+
+    def create(self, validated_data):
+        self.validate_table_number(validated_data.get('table_number', None))
+        self.validate_items(validated_data.get('items', None))
+        self.validate_total_price(validated_data.get('total_price', None))
+        self.validate_status(validated_data.get('status', None))
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        instance.table_number = self.validate_table_number(validated_data.get('table_number', None))
+        instance.items = self.validate_items(validated_data.get('items', None))
+        instance.total_price = self.validate_total_price(validated_data.get('total_price', None))
+        instance.status = self.validate_status(validated_data.get('status', None))
+        return super().update(instance, validated_data)

@@ -30,13 +30,17 @@ class Order(models.Model):
         ordering = ['-status']
         indexes = [models.Index(fields=['-id'])]
 
-    table_number = models.IntegerChoices
+    table_number = models.IntegerField()
     items = models.ManyToManyField(
         to=Meal,
         related_name='orders',
         through='order_meal')
-    total_price = None
     status = models.CharField(
         max_length=4,
         choices=Status.choices,
         default=Status)
+
+    @property
+    def total_price(self):
+        prices = [item.price for item in self.items.all()]
+        return  sum(prices)
