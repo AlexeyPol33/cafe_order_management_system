@@ -35,11 +35,11 @@ class Order(models.Model):
     items = models.ManyToManyField(
         to=Meal,
         related_name='orders',
-        through='OrderMeal')
+        through='OrderMeal',blank=False, null=False)
     status = models.CharField(
         max_length=4,
         choices=Status.choices,
-        default=Status)
+        default=Status.PENDING)
 
     @property
     def total_price(self):

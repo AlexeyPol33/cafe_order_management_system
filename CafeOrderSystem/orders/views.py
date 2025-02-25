@@ -8,3 +8,9 @@ from .serializers import OrderSerializer, MealSerializer
 class MealViewSet(ModelViewSet):
     queryset = Meal.objects.all()
     serializer_class = MealSerializer
+    http_method_names = ['get', 'post', 'patch', 'put', 'delete']
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    http_method_names = ['get', 'post', 'patch', 'put', 'delete']

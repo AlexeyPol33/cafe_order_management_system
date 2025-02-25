@@ -1,7 +1,12 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from typing import Sequence
 from .models import Meal, Order
+from django.core.exceptions import ObjectDoesNotExist
 import logging
+
+
+logger = logging.getLogger('main')
 
 class MealSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,9 +52,20 @@ class MealSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 class OrderSerializer(serializers.ModelSerializer):
+
+    items = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Meal.objects.all())
+
     class Meta:
         model = Order
-        fields = ['id', 'table_number', 'items', 'total_price', 'status']
+        fields = ['id', 'table_number', 'items', 'status']
+        read_only_fields = ['id']
+
+    def validate(self, attrs):
+        if self.context['request'].method == 'POST':
+            attrs.pop('status', None)
+        return attrs
 
     def validate_table_number(self, table_number):
         if table_number is None:
@@ -58,22 +74,21 @@ class OrderSerializer(serializers.ModelSerializer):
                 code=400)
         return table_number
 
-    def validate_items(self, items):
-        return items
-
     def validate_status(self, status):
         return status
 
     def create(self, validated_data):
         self.validate_table_number(validated_data.get('table_number', None))
-        self.validate_items(validated_data.get('items', None))
-        self.validate_total_price(validated_data.get('total_price', None))
-        self.validate_status(validated_data.get('status', None))
+        validated_data['status'] = Order.Status.PENDING
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
         instance.table_number = self.validate_table_number(validated_data.get('table_number', None))
-        instance.items = self.validate_items(validated_data.get('items', None))
         instance.total_price = self.validate_total_price(validated_data.get('total_price', None))
         instance.status = self.validate_status(validated_data.get('status', None))
         return super().update(instance, validated_data)
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['items'] = MealSerializer(instance.items.all(), many=True).data
+        return representation
