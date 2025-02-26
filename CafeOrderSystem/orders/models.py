@@ -35,7 +35,7 @@ class Order(models.Model):
     items = models.ManyToManyField(
         to=Meal,
         related_name='orders',
-        through='OrderMeal',blank=False, null=False)
+        through='OrderMeal')
     status = models.CharField(
         max_length=4,
         choices=Status.choices,

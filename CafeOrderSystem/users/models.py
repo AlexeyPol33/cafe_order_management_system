@@ -55,6 +55,7 @@ class User(AbstractUser):
         error_messages={
             'unique': _('A user with that username already exists.'),
         },
+        unique=True
     )
     is_active = models.BooleanField(
         _('active'),
