@@ -4,5 +4,13 @@
 
 {% block content %}
     <h1>Menu</h1>
-    
+    {% for meal in meals %}
+    <h2>
+        <a href="#">
+            {{meal.name}}
+        </a>
+    </h2>
+    <p>Цена: {{meal.price}}</p>
+    {{ meal.description|truncatewords:30 }}
+    {% endfor %}
 {% endblock %}

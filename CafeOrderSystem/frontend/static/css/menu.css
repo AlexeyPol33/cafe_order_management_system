@@ -25,10 +25,12 @@ header {
     display: flex;
     align-items: stretch;
 }
+
 .logo img {
     max-width: 150px;
     height: auto;
 }
+
 nav ul {
     list-style: none;
     display: inline-flex;
@@ -48,4 +50,11 @@ nav ul li a {
 
 nav ul li a:hover {
     text-decoration: underline;
+}
+
+.content{
+    color: #321f11;
+    float:left;
+    width:60%;
+    padding: 50px; 
 }
