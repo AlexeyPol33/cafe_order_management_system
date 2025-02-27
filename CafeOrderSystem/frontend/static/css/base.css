@@ -58,3 +58,15 @@ nav ul li a:hover {
     width:60%;
     padding: 50px; 
 }
+
+a {
+    color: #321f11;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: rgb(238, 84, 13);
+    text-decoration: underline;
+    transition: 0.3s;
+}

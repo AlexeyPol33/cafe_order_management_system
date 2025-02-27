@@ -3,14 +3,15 @@
 {% block title %}Menu{% endblock %}
 
 {% block content %}
-    <h1>Menu</h1>
     {% for meal in meals %}
     <h2>
-        <a href="#">
+        <a href="{% url "frontend:menu_detail" meal.id %}">
             {{meal.name}}
         </a>
     </h2>
     <p>Цена: {{meal.price}}</p>
-    {{ meal.description|truncatewords:30 }}
+    <div class="description">
+        {{ meal.description|truncatewords:30 }}
+    </div>
     {% endfor %}
 {% endblock %}

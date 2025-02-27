@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link href="{% static "css/menu.css" %}" rel="stylesheet">
+    <link href="{% static "css/base.css" %}" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
@@ -15,9 +15,9 @@
     </div>
     <nav>
         <ul>
-            <li><a href="#">Главная</a></li>
+            <li><a href="{% url "frontend:menu_list" %}">Меню</a></li>
             <li><a href="#">Вход</a></li>
-            <li><a href="#">Регистрация</a></li>
+            <li><a href="#">Личный кабинет</a></li>
             <li><a href="#">Заказы</a></li>
         </ul>
     </nav>

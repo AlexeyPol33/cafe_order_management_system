@@ -10,6 +10,23 @@ def menu_list(request):
     meals = requests.get(url).json()
 
     return render(
-        request,
-        'menu/list.html',
-        {'meals':meals})
+        request=request,
+        template_name='menu/list.html',
+        context={'meals':meals})
+
+def menu_detail(request, meal_id:int):
+    url = request.build_absolute_uri(reverse('orders:meal-detail', kwargs={'pk': meal_id}))
+    meal_data = requests.get(url)
+    if meal_data.status_code != 200:
+        return render(
+            request=request,
+            template_name='error/error.html',
+            context={'message':meal_data.text},
+            status=meal_data.status_code)
+    else:
+        meal_data = meal_data.json()
+    return render(
+        request=request,
+        template_name='menu/detail.html',
+        context={'meal':meal_data})
+    

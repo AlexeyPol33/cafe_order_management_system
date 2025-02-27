@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Detail{% endblock %}
+
+{% block content %}
+<h1>{{meal.name}}</h1>
+<p>Цена: {{meal.price}}</p>
+<div class="description">
+    {{meal.description}}
+</div>
+<button onclick="">Добавить</button>
+{% endblock %}
