@@ -1,0 +1,8 @@
+<form action="{% url "frontend:post_order" %}" method="post">
+    {% csrf_token %}
+    <div class="order_post_form_container">
+        Введите номер столика:
+        {{ form.table }}
+        <button type="submit" class="order_post_form_button">Оформить</button>
+    </div>
+</form>

@@ -27,6 +27,8 @@
     {% if total_price and total_quantity %}
     <div class="basket_total_values">
         <strong>К оплате: {{ total_price }} рублей за {{ total_quantity }} товаров</strong>
+
     </div>
+    {% include "order/includes/order_post_form.html" %}
     {% endif %}
 {% endblock %}

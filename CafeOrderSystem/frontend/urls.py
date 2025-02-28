@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import menu_list, menu_detail, basket, basket_add_item, basket_del_item
+from .views import menu_list, menu_detail, basket, basket_add_item, basket_del_item, post_order
 
 app_name = 'frontend'
 urlpatterns = [
@@ -25,5 +25,9 @@ urlpatterns = [
         basket_del_item,
         name='basket_del_with_quantity'
     ),
-
+    path(
+        'order/post',
+        post_order,
+        name='post_order',
+    )
 ]

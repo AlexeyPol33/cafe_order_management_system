@@ -1,9 +1,10 @@
 import requests
 import json
+import logging
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-import logging
+from .forms import OrderPostForm
 
 logger = logging.getLogger('main')
 
@@ -64,7 +65,8 @@ def basket(request):
         template_name='order/basket.html',
         context={'items': items,
                  'total_price': total_price,
-                 'total_quantity': total_quantity})
+                 'total_quantity': total_quantity,
+                 'form': OrderPostForm()})
 
 
 def basket_add_item(request, meal_id: int, quantity=1):
@@ -160,3 +162,37 @@ def basket_del_item(request, meal_id: int, quantity=1):
     response.set_cookie('basket', json.dumps(data))
 
     return response
+
+
+def post_order(request):
+    form = None
+    if request.method == 'POST':
+        form = OrderPostForm(request.POST)
+        if not form.is_valid():
+            return render(
+                request,
+                'error/error.html',
+                {'status': 400, 'message': "Не верные значения формы"}, 
+                status=400)
+    else:
+        HttpResponseRedirect(reverse('frontend:basket'))
+    items = request.COOKIES.get('basket', None)
+    if items is None:
+        return render(
+            request,
+            'error/error.html',
+            {'status': 400, 'message': "В корзине нет товаров"}, 
+            status=400)
+    request_tem = {
+            "table_number": form.cleaned_data['table'],
+            "items": [],
+            "status": "null"}
+    for item in items:
+        for key, value in item.items():
+            request_tem["items"].append()
+
+    url = request.build_absolute_uri(
+    reverse('orders:meal-detail', kwargs={}))
+
+
+

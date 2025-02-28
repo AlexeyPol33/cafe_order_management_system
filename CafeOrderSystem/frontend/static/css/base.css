@@ -71,13 +71,13 @@ a:hover {
     transition: 0.3s;
 }
 .basket_total_values {
-    color: #321f11; /* Темный цвет текста */
-    padding: 20px; /* Отступы вокруг текста */
-    border-radius: 10px; /* Скругленные углы */
-    text-align: center; /* Выравнивание текста по центру */
-    font-size: 18px; /* Размер шрифта */
-    font-weight: bold; /* Жирный текст */
-    margin-top: 20px; /* Отступ сверху */
+    color: #321f11;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
 }
 .basket_add_button {
     display: inline-block;
@@ -122,5 +122,48 @@ a:hover {
 
 .basket_del_button:active {
     background-color: #a71d2a;
+    transform: scale(0.95);
+}
+
+.order_post_form_container {
+    color: #321f11;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.order_post_form_container input {
+    width: 80px;
+    height: 30px;
+    font-size: 18px;
+    padding: 10px;
+    border: 2px solid #6f4e37;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.order_post_form_button {
+    display: inline-block;
+    background-color: #120a8f;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.order_post_form_button:hover {
+    background-color: #352a7f;
+    transform: scale(1.05);
+}
+
+.order_post_form_button:active {
+    background-color: #436d49;
     transform: scale(0.95);
 }
