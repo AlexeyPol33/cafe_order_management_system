@@ -70,6 +70,15 @@ a:hover {
     text-decoration: underline;
     transition: 0.3s;
 }
+.basket_total_values {
+    color: #321f11; /* Темный цвет текста */
+    padding: 20px; /* Отступы вокруг текста */
+    border-radius: 10px; /* Скругленные углы */
+    text-align: center; /* Выравнивание текста по центру */
+    font-size: 18px; /* Размер шрифта */
+    font-weight: bold; /* Жирный текст */
+    margin-top: 20px; /* Отступ сверху */
+}
 .basket_add_button {
     display: inline-block;
     background-color: #6f4e37;
@@ -82,11 +91,36 @@ a:hover {
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
 }
+
 .basket_add_button:hover {
     background-color: #37586f;
     transform: scale(1.05);
 }
+
 .basket_add_button:active {
     background-color: #6f4e37;
+    transform: scale(0.95);
+}
+
+.basket_del_button {
+    display: inline-block;
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.basket_del_button:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+.basket_del_button:active {
+    background-color: #a71d2a;
     transform: scale(0.95);
 }

@@ -12,11 +12,21 @@
             </a>
         </h2>
         <p>Цена: {{ value.price }} Количество: {{ value.quantity }} </p>
+        <form action="{% url 'frontend:basket_add' key %}" style="display: inline;">
+            {% csrf_token %}
+            <button class="basket_add_button">Добавить в корзину</button>
+        </form>
+        <form action="{% url 'frontend:basket_del' key %}" style="display: inline;">
+            {% csrf_token %}
+            <button class="basket_del_button">удалить из корзины</button>
+        </form>
         {% endfor %}
     {% empty %}
         Ваша корзина пуста
     {% endfor %}
     {% if total_price and total_quantity %}
-        <strong>К оплате:{{ total_price }} за {{ total_quantity }} товаров</strong>
+    <div class="basket_total_values">
+        <strong>К оплате: {{ total_price }} рублей за {{ total_quantity }} товаров</strong>
+    </div>
     {% endif %}
 {% endblock %}

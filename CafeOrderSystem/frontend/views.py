@@ -122,3 +122,41 @@ def basket_add_item(request, meal_id: int, quantity=1):
     response.set_cookie('basket', json.dumps(data))
 
     return response
+
+
+def basket_del_item(request, meal_id: int, quantity=1):
+    meal_id = int(meal_id)
+    basket = request.COOKIES.get('basket', None)
+    #Проверяем существование корзины
+    if basket is None:
+        return render(
+            request,
+            'error/error.html',
+            {'status': 404, 'message': "Корзина пуста"}, 
+            status=404)
+    
+    #Проверяем, есть ли товар в корзине
+    data = json.loads(basket)
+    item_found = False
+    for i, item in enumerate(data["items"]):
+        meal_key = list(item.keys())[0]
+        if int(meal_key) == meal_id:
+            item[meal_key]["quantity"] -= quantity
+            if item[meal_key]["quantity"] <= 0:
+                data["items"].pop(i)
+            item_found = True
+            break
+
+    # Если товара в корзине нет
+    if not item_found:
+        return render(
+            request,
+            'error/error.html',
+            {'status': 404, 'message': "Товар отсутствует"}, 
+            status=404)
+    
+    # Сохраняем обновленные данные в cookie
+    response = HttpResponseRedirect(reverse('frontend:basket'))
+    response.set_cookie('basket', json.dumps(data))
+
+    return response

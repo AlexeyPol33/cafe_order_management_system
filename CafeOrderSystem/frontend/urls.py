@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import menu_list, menu_detail, basket, basket_add_item
+from .views import menu_list, menu_detail, basket, basket_add_item, basket_del_item
 
 app_name = 'frontend'
 urlpatterns = [
@@ -16,5 +16,14 @@ urlpatterns = [
         'basket/add/<int:meal_id>/<int:quantity>',
         basket_add_item,
         name='basket_add_with_quantity'),
+    path(
+        'basket/del/<int:meal_id>',
+        basket_del_item,
+        name='basket_del'),
+    path(
+        'basket/del/<int:meal_id>/<int:quantity>',
+        basket_del_item,
+        name='basket_del_with_quantity'
+    ),
 
-    ]
+]
