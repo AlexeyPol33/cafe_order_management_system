@@ -165,6 +165,7 @@ def basket_del_item(request, meal_id: int, quantity=1):
 
 
 def post_order(request):
+    # Получение данных из формы и корзины
     form = None
     if request.method == 'POST':
         form = OrderPostForm(request.POST)
@@ -183,16 +184,50 @@ def post_order(request):
             'error/error.html',
             {'status': 400, 'message': "В корзине нет товаров"}, 
             status=400)
+
+    # Запрос к внутреннему API
     request_tem = {
             "table_number": form.cleaned_data['table'],
             "items": [],
             "status": "null"}
     for item in items:
         for key, value in item.items():
-            request_tem["items"].append()
-
+            request_tem["items"].append({'meal':key,'quantity':value.get('quantity',1)})
     url = request.build_absolute_uri(
-    reverse('orders:meal-detail', kwargs={}))
+    reverse('orders:meal-detail'))
+    req = requests.post(url, data=request_tem)
+    if req.status_code != 201:
+        return render(
+            request,
+            'error/error.html',
+            {'status': 400, 'message': req.text})
 
+    # Сохраняем id заказа и Удаляем корзину
+    orders = request.COOKIES.get('orders', json.dumps([]))
+    orders = json.loads(orders).append(req.json().get('id'))
+    response = HttpResponseRedirect(reverse('frontend:basket')) # Todo поменять ссылку
+    response.set_cookie('orders', json.dumps(orders))
+    response.delete_cookie('basket')
+    return response
 
+def order_list_one_line_view(request):
+    url = request.build_absolute_uri(reverse('orders:order-list'))
+    orders = requests.get(url=url)
+    if orders.status_code != 200:
+        return render(
+            request,
+            'error/error.html',
+            {'status': 400, 'message': orders.text})
+    return HttpResponseRedirect(reverse('frontend:home'))
 
+def order_list_view(request):
+    return HttpResponseRedirect(reverse('frontend:home'))
+
+def oreder_detail_view(request):
+    return HttpResponseRedirect(reverse('frontend:home'))
+
+def order_pay_button(request):
+    return HttpResponseRedirect(reverse('frontend:home'))
+
+def order_canc_button(request):
+    return HttpResponseRedirect(reverse('frontend:home'))

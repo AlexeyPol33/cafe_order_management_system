@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Orders{% endblock %}
+
+{% block content %}
+    <h1>Ваши заказы</h1>
+    {% for order in orders %}
+    <div class="order_container"> 
+        <strong>
+            Заказ №{{order.id}}|Стол №{{order.id}}|Сумма {{total_price}}|Количество {{total_quantity}}
+        </strong>
+        {for item in order.items}
+            <h2>
+                <a href="{% url "frontend:menu_detail" item.id %}">
+                    {{ item.name }}
+                </a>
+            </h2>
+            <p>Цена: {{ item.price }} Количество: {{ item.quantity }} </p>
+        {% endfor %}
+        <strong>СТАТУС: {{ order.status }}</strong>
+        {% if order.status == "PEND" %}
+            <form 
+        {% endif %}
+    </div>
+    {% empty %}
+    Нет заказов 
+    {% endfor %}
+{% endblock %}
