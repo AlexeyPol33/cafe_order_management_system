@@ -8,5 +8,8 @@
 <div class="description">
     {{meal.description}}
 </div>
-<button onclick="">Добавить</button>
+<form action="{% url "frontend:basket_add" meal.id %}">
+    {% csrf_token %}
+    <button class="basket_add_button">Добавить в корзину</button>
+</form>
 {% endblock %}

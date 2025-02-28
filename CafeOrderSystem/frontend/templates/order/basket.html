@@ -5,16 +5,18 @@
 {% block content %}
     <h1>Ваша корзина</h1>
     {% for item in items %}
-    <h2>
-        <a href="{{ item.url }}">
-            {{ item.name }}
-        </a>
-    </h2>
-    <p>Цена: {{ item.price }} Количество: {{ item.quantity }} </p>
+        {% for key, value in item.items %}
+        <h2>
+            <a href="{{ value.url }}">
+                {{ value.name }}
+            </a>
+        </h2>
+        <p>Цена: {{ value.price }} Количество: {{ value.quantity }} </p>
+        {% endfor %}
     {% empty %}
         Ваша корзина пуста
     {% endfor %}
-    {% if total_price and total_quantity%}
+    {% if total_price and total_quantity %}
         <strong>К оплате:{{ total_price }} за {{ total_quantity }} товаров</strong>
     {% endif %}
 {% endblock %}

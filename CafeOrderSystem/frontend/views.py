@@ -2,7 +2,7 @@ import requests
 import json
 from django.shortcuts import render
 from django.urls import reverse
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 import logging
 
 logger = logging.getLogger('main')
@@ -25,7 +25,10 @@ def menu_detail(request, meal_id:int):
         return render(
             request=request,
             template_name='error/error.html',
-            context={'message':meal_data.text},
+            context={
+                'status':meal_data.status_code,
+                'message':meal_data.text
+                },
             status=meal_data.status_code)
     else:
         meal_data = meal_data.json()
@@ -39,15 +42,23 @@ def basket(request):
     try:
         basket = request.COOKIES.get('basket', json.dumps({}))
         items = json.loads(basket).get('items',[])
-    except json.JSONDecodeError:
-            return render(
+    except json.JSONDecodeError as e:
+        logger.error(f'basket JSONDecodeError: {e.msg}, cookie: {basket}')
+        _render = render(
                 request=request,
                 template_name='error/error.html',
-                context={'message':"error: Invalid JSON in cookie"},
+                context={
+                    'status':400,
+                    'message':"error: Invalid JSON in cookie"},
                 status=400)
-    total_price = sum([i.price for i in items])
-    total_quantity = sum([i.quantity for i in items])
-
+        _render.delete_cookie('basket')
+        return _render
+    total_price = 0
+    total_quantity = 0
+    for item in items:
+        for value in item.values():
+            total_price += float(value['price']) * int(value['quantity'])
+            total_quantity += int(value['quantity'])
     return render(
         request=request,
         template_name='order/basket.html',
@@ -56,40 +67,58 @@ def basket(request):
                  'total_quantity': total_quantity})
 
 
-def basket_add_item(request, meal_id:int, quantity=1):
+def basket_add_item(request, meal_id: int, quantity=1):
+    meal_id = int(meal_id)
     basket = request.COOKIES.get('basket', None)
+
+    # Получаем информацию о товаре
     meal_url = request.build_absolute_uri(reverse('orders:meal-detail', kwargs={'pk': meal_id}))
-    meal = requests.get(meal_url)
-    if meal.status_code != 200:
+    meal_response = requests.get(meal_url)
+
+    if meal_response.status_code != 200:
         return render(
             request=request,
             template_name='error/error.html',
-            context={'message':meal.text},
-            status=meal.status_code)
+            context={'status': 400, 'message': meal_response.text},
+            status=meal_response.status_code
+        )
+
+    meal = meal_response.json()
+
+    # Загружаем корзину, если есть
     if basket:
         try:
-            data = json.load(basket)
-            items = data['items']
-            try:
-                item = [i for i, _ in enumerate(items) if _==meal_id].pop() # Если элемент уже есть в корзине
-                data['items'][item]['quantity'] += quantity
-            except IndexError: # Если элемента нет
-                data['items'].append(
-                {meal.id:{
-                    'name': meal.name,
-                    'price': meal.price,
-                    'quantity': quantity,
-                    'url': request.build_absolute_uri(reverse('frontend:menu_detail',args=meal.id))}})
+            data = json.loads(basket)
         except json.JSONDecodeError:
-            return render(
-                request=request,
-                template_name='error/error.html',
-                context={'message':"error: Invalid JSON in cookie"},
-                status=400)
+            logger.error("basket_add_item: Invalid JSON in cookie")
+            response = render(request, 'error/error.html', {'status': 400, 'message': "Invalid JSON in cookie"}, status=400)
+            response.delete_cookie('basket')
+            return response
     else:
-        data = json.dumps({
-                'items':[{meal.id:{
-                    'name': meal.name,
-                    'quantity': quantity,
-                    'url': request.build_absolute_uri(reverse('frontend:menu_detail',args=meal.id))}}]})
-    return HttpResponse('',).set_cookie()
+        data = {"items": []}
+
+    # Проверяем, есть ли уже товар в корзине
+    item_found = False
+    for item in data["items"]:
+        meal_key = list(item.keys())[0]
+        if int(meal_key) == meal_id:
+            item[meal_key]["quantity"] += quantity
+            item_found = True
+            break
+
+    # Если товара нет — добавляем новый
+    if not item_found:
+        data["items"].append({
+            str(meal_id): {
+                "name": meal["name"],
+                "price": meal["price"],
+                "quantity": quantity,
+                "url": request.build_absolute_uri(reverse('frontend:menu_detail', args=[meal_id]))
+            }
+        })
+
+    # Сохраняем обновленные данные в cookie
+    response = HttpResponseRedirect(reverse('frontend:basket'))
+    response.set_cookie('basket', json.dumps(data))
+
+    return response
