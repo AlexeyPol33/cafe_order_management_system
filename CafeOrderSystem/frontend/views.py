@@ -251,8 +251,6 @@ def order_list_one_line_view(request):
         'order/list_one_line.html',
         context={'context':orders})
 
-def order_list_view(request):
-    return HttpResponseRedirect(reverse('frontend:home'))
 
 def oreder_detail_view(request, order_id:int):
     order_id = int(order_id)
@@ -279,8 +277,28 @@ def oreder_detail_view(request, order_id:int):
         'order/detail.html',
         context={'order':order})
 
+
+def order_list_view(request):
+    return HttpResponseRedirect(reverse('frontend:home'))
+
+
 def order_pay_button(request):
     return HttpResponseRedirect(reverse('frontend:home'))
 
+
 def order_canc_button(request):
     return HttpResponseRedirect(reverse('frontend:home'))
+
+
+def management_menu_view(request):
+
+    return render(
+        request,
+        'management\menu.html')
+    
+
+def management_report_view(request):
+
+    return render(
+        request,
+        'management\report.html')

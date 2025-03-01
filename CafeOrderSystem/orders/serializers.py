@@ -65,8 +65,8 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'table_number', 'items', 'status']
-        read_only_fields = ['id']
+        fields = ['id', 'created', 'table_number', 'items', 'status']
+        read_only_fields = ['id', 'created']
 
     def validate(self, attrs):
         if self.context['request'].method == 'POST':
@@ -115,6 +115,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'id': instance.id,
             'table_number': instance.table_number,
             'status': instance.status,
+            'created': instance.created,
             'total_price': 0,
             'total_quantity': 0
         }

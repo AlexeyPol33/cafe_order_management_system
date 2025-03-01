@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Management{% endblock %}
+
+{% block content %}
+    <h1>
+        Панель Управление
+    </h1>
+    <div class="admin-menu">
+        <ul>
+            <li><a href="{% url "frontend:order_list_one_line" %}">📦Заказы</a></li>
+            <li><a href="{% url "frontend:management_report" %}">📊Отчеты</a></li>
+        </ul>
+    </div>
+{% endblock %}

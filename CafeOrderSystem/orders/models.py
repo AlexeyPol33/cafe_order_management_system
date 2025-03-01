@@ -32,6 +32,7 @@ class Order(models.Model):
         ordering = ['-status']
         indexes = [models.Index(fields=['-id'])]
 
+    created = models.DateTimeField(auto_now_add=True)
     table_number = models.IntegerField()
     items = models.ManyToManyField(
         to=Meal,
