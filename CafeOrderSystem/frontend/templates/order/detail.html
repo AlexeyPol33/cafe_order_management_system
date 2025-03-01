@@ -29,5 +29,10 @@
                 <button class="basket_del_button">отменить</button>
             </form>
         {% endif %}
+        <!-- Удалить после Преальфы -->
+        <form action="{% url 'frontend:management_order_detail' order.id %}" style="display: inline;">
+            {% csrf_token %}
+            <button class="basket_del_button">УПРАВЛЯТЬ</button>
+        </form>
     </div>
 {% endblock %}

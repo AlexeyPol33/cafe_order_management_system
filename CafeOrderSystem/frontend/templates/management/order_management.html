@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Order detail{% endblock %}
+
+{% block content %}
+    <div class="order_container"> 
+        <h1>Заказ №{{ order.id }}</h1>
+
+            <p>Сумма: {{ order.total_price }}</p>
+            <p>Стол: {{ order.table_number }}</p>
+            <p>Количество: {{ order.total_quantity }}</p>
+
+        <form action="{% url 'frontend:management_order_detail' order.id %}" method="PATCH">
+            {% csrf_token %}
+            <label for="status">Статус:</label>
+            <select name="status" id="status">
+                <option value="PEND" {% if order.status == 'PEND' %}selected{% endif %}>в ожидании</option>
+                <option value="INPR" {% if order.status == 'INPR' %}selected{% endif %}>в процессе</option>
+                <option value="COMP" {% if order.status == 'COMP' %}selected{% endif %}>завершен</option>
+                <option value="CANC" {% if order.status == 'CANC' %}selected{% endif %}>отменен</option>
+                <option value="PAID" {% if order.status == 'PAID' %}selected{% endif %}>оплачен</option>
+            </select>
+            <button type="submit" class="change_status_button">Изменить статус</button>
+        </form>
+        {% for item in order.items %}
+            <h2>
+                <a href="{% url "frontend:menu_detail" item.id %}">
+                    {{ item.name }}
+                </a>
+            </h2>
+            <p>Цена: {{ item.price }} Количество: {{ item.quantity }}</p>
+        {% endfor %}
+            <form action="{% url 'frontend:order_dell' order.id %}" style="display: inline;">
+                {% csrf_token %}
+                <button class="basket_del_button">удалить</button>
+            </form>
+    </div>
+{% endblock %}

@@ -293,6 +293,7 @@ def order_pay_button(request, order_id):
 
 
 def order_canc_button(request, order_id):
+    order_id = int(order_id)
     order_url = request.build_absolute_uri(reverse('orders:order-detail', kwargs={'pk': order_id}))
     req = requests.patch(order_url, json={'status':'CANC'})
     if req.status_code != 200:
@@ -303,12 +304,22 @@ def order_canc_button(request, order_id):
 
     return HttpResponseRedirect(reverse('frontend:order_detail',kwargs={'order_id': order_id}))
 
+def order_del_button(request, order_id):
+    order_id = int(order_id)
+    order_url = request.build_absolute_uri(reverse('orders:order-detail', kwargs={'pk': order_id}))
+    req = requests.delete(order_url)
+    if req.status_code != 204:
+        return render(
+            request,
+            'error/error.html',
+            {'status': req.status_code, 'message': req.text})
+    return HttpResponseRedirect(reverse('frontend:order_list_one_line'))
+
 
 def management_menu_view(request):
     return render(
         request,
         'management\menu.html')
-
 
 def management_report_view(request):
     date_param = request.GET.get('date', None)
@@ -336,3 +347,26 @@ def management_report_view(request):
     return render(
         request,
         'management\\report.html')
+
+
+def management_order_detail_view(request,order_id=None):
+    order_id = int(order_id)
+    order_url = request.build_absolute_uri(reverse('orders:order-detail', kwargs={'pk': order_id}))
+    if request.method == "PATCH":
+        status = request.POST.get('status')
+
+    order = requests.get(order_url)
+    if order.status_code != 200:
+        return render(
+            request,
+            'error/error.html',
+            context={'status': order.status_code, 'message': order.text},
+            status=order.status_code
+        )
+    else:
+        order = order.json()
+
+    return render(
+        request,
+        'management\order_management.html',
+        context={'order':order})
