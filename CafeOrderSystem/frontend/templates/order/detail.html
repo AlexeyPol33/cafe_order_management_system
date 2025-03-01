@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Order detail{% endblock %}
+
+{% block content %}
+    <div class="order_container"> 
+        <h1>Заказ №{{ order.id }}</h1>
+        <p>
+            Сумма: {{ order.total_price }}
+            Стол: {{ order.table_number }}
+            Количество: {{ order.total_quantity }}
+            Статус: {% include "order/includes/order_status.html" %}
+        </p>
+        {% for item in order.items %}
+            <h2>
+                <a href="{% url "frontend:menu_detail" item.id %}">
+                    {{ item.name }}
+                </a>
+            </h2>
+            <p>Цена: {{ item.price }} Количество: {{ item.quantity }}</p>
+        {% endfor %}
+        {% if order.status == "PEND" %}
+            <form action="{% url 'frontend:order_pay' order.id %}" style="display: inline;">
+                {% csrf_token %}
+                <button class="basket_add_button">оплатить</button>
+            </form>
+            <form action="{% url 'frontend:order_canc' order.id %}" style="display: inline;">
+                {% csrf_token %}
+                <button class="basket_del_button">отменить</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

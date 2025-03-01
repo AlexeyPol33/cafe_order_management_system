@@ -42,7 +42,7 @@ orderpatterns = [
         post_order,
         name='post_order',),
     path(
-        'oreder/detail',
+        'order/detail/<int:order_id>',
         oreder_detail_view,
         name='order_detail'),
     path(
@@ -54,11 +54,11 @@ orderpatterns = [
         order_list_one_line_view,
         name='order_list_one_line'),
     path(
-        'order/button/pay',
+        'order/button/pay/<int:order_id>',
         order_pay_button,
         name='order_pay'),
     path(
-        'order/button/canc',
+        'order/button/canc/<int:order_id>',
         order_canc_button,
         name='order_canc')
 ]

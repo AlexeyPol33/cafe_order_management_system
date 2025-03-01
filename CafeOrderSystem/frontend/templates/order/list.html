@@ -7,9 +7,9 @@
     {% for order in orders %}
     <div class="order_container"> 
         <strong>
-            Заказ №{{order.id}}|Стол №{{order.id}}|Сумма {{total_price}}|Количество {{total_quantity}}
+            Заказ №{{order.id}}|Стол №{{order.id}}|Сумма {{order.total_price}}|Количество {{order.total_quantity}}
         </strong>
-        {for item in order.items}
+        {% for item in order.items %}
             <h2>
                 <a href="{% url "frontend:menu_detail" item.id %}">
                     {{ item.name }}
@@ -19,7 +19,14 @@
         {% endfor %}
         <strong>СТАТУС: {{ order.status }}</strong>
         {% if order.status == "PEND" %}
-            <form 
+            <form action="{% url 'frontend:order_canc' order.id %}">
+                {% csrf_token %}
+                <button class="basket_del_button">отменить заказ</button>
+            </form>
+            <form action="{% url 'frontend:order_canc' order.id %}">
+                {% csrf_token %}
+                <button class="order_pay_button">отменить заказ</button>
+            </form>
         {% endif %}
     </div>
     {% empty %}

@@ -205,12 +205,20 @@ def post_order(request):
     # Сохраняем id заказа и Удаляем корзину
     orders = request.COOKIES.get('orders', json.dumps([]))
     orders = json.loads(orders).append(req.json().get('id'))
-    response = HttpResponseRedirect(reverse('frontend:basket')) # Todo поменять ссылку
+    response = HttpResponseRedirect(reverse('frontend:detail'))
     response.set_cookie('orders', json.dumps(orders))
     response.delete_cookie('basket')
     return response
 
 def order_list_one_line_view(request):
+    form = None
+    query = None
+    orders = []
+
+    if 'query' in request.GET:
+        #form = SearchForm(request.GET)
+        pass
+
     url = request.build_absolute_uri(reverse('orders:order-list'))
     orders = requests.get(url=url)
     if orders.status_code != 200:
@@ -223,8 +231,30 @@ def order_list_one_line_view(request):
 def order_list_view(request):
     return HttpResponseRedirect(reverse('frontend:home'))
 
-def oreder_detail_view(request):
-    return HttpResponseRedirect(reverse('frontend:home'))
+def oreder_detail_view(request, order_id:int):
+    order_id = int(order_id)
+    order_url = request.build_absolute_uri(reverse('orders:order-detail', kwargs={'pk': order_id}))
+    order = requests.get(order_url)
+    if order.status_code != 200:
+        return render(
+            request,
+            'error/error.html',
+            context={'status': order.status_code, 'message': order.text},
+            status=order.status_code
+        )
+    else:
+        order = order.json()
+        order['total_price'] = 0
+        order['total_quantity'] = 0
+    items = order.get("items", [])
+    for item in items:
+        order['total_price'] += float(item['price']) * float(item['quantity'])
+        order['total_quantity'] += int(item['quantity'])
+
+    return render(
+        request,
+        'order/detail.html',
+        context={'order':order})
 
 def order_pay_button(request):
     return HttpResponseRedirect(reverse('frontend:home'))

@@ -26,6 +26,7 @@ class Order(models.Model):
         INPROGRESS = 'INPR', 'в процессе'
         COMPLETED = 'COMP', 'завершен'
         CANCELED = 'CANC', 'отменен'
+        PAID = 'PAID', 'оплачен'
 
     class Meta:
         ordering = ['-status']

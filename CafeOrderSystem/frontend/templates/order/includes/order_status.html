@@ -1,0 +1,15 @@
+{% if order.status == "PEND"%}
+в ожидании
+{% endif %}
+{% if order.status == "INPR"%}
+в процессе
+{% endif %}
+{% if order.status == "COMP"%}
+завершен
+{% endif %}
+{% if order.status == "CANC"%}
+отменен
+{% endif %}
+{% if order.status == "PAID"%}
+оплачен
+{% endif %}
