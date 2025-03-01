@@ -42,11 +42,6 @@ class Order(models.Model):
         choices=Status.choices,
         default=Status.PENDING)
 
-    @property
-    def total_price(self):
-        prices = [item.price for item in self.items.all()]
-        return sum(prices)
-
 
 class OrderMeal(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

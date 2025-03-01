@@ -9,3 +9,5 @@ class OrderPostForm(forms.Form):
             'placeholder': 'Введите номер столика'
         }),
         )
+class SearchForm(forms.Form):
+    query = forms.CharField()

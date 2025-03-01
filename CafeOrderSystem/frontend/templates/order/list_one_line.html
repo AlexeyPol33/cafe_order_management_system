@@ -4,12 +4,14 @@
 
 {% block content %}
     <h1>Заказы</h1>
-    {% for order in orders %}
+    {% for order in context %}
+    <p>
         <a href="{% url 'frontend:order_detail' order.id %}">
             Заказ №{{ order.id }}
             Стол №{{ order.table_number }}
             Сумма {{ order.total_price }}
             Количество {{ order.total_quantity }}
         </a>
+    </p>
     {% endfor %}
 {% endblock %}

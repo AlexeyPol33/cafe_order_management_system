@@ -7,7 +7,14 @@ from django.http import HttpResponseRedirect
 from .forms import OrderPostForm
 
 logger = logging.getLogger('main')
-
+order_template = {
+  "table_number": 5,
+  "status": "PEND",
+  "items": [
+    {"meal": None, "quantity": None},
+    {"meal": None, "quantity": None}
+  ]
+}
 
 def menu_list(request):
     url = request.build_absolute_uri(reverse('orders:meal-list'))
@@ -211,6 +218,7 @@ def post_order(request):
     return response
 
 def order_list_one_line_view(request):
+    orders_url = request.build_absolute_uri(reverse('orders:order-list'))
     form = None
     query = None
     orders = []
@@ -218,15 +226,18 @@ def order_list_one_line_view(request):
     if 'query' in request.GET:
         #form = SearchForm(request.GET)
         pass
-
-    url = request.build_absolute_uri(reverse('orders:order-list'))
-    orders = requests.get(url=url)
-    if orders.status_code != 200:
-        return render(
-            request,
-            'error/error.html',
-            {'status': 400, 'message': orders.text})
-    return HttpResponseRedirect(reverse('frontend:home'))
+    else:
+        req = requests.get(orders_url)
+        if req.status_code != 200:
+            return render(
+                request,
+                'error/error.html',
+                {'status': req.status_code, 'message': req.text})
+        orders = req.json()
+    return render(
+        request,
+        'order/list_one_line.html',
+        context={'context':orders})
 
 def order_list_view(request):
     return HttpResponseRedirect(reverse('frontend:home'))

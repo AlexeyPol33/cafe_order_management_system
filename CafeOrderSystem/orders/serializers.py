@@ -114,7 +114,9 @@ class OrderSerializer(serializers.ModelSerializer):
         representation = {
             'id': instance.id,
             'table_number': instance.table_number,
-            'status': instance.status
+            'status': instance.status,
+            'total_price': 0,
+            'total_quantity': 0
         }
 
         items_representation = []
@@ -123,6 +125,8 @@ class OrderSerializer(serializers.ModelSerializer):
             meal_data = MealSerializer(order_meal.meal).data
             meal_data['quantity'] = order_meal.quantity
             items_representation.append(meal_data)
+            representation['total_price'] += float(meal_data['price']) * int(order_meal.quantity)
+            representation['total_quantity'] += int(order_meal.quantity)
         
         representation['items'] = items_representation
         return representation
