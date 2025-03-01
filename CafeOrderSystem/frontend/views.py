@@ -196,23 +196,25 @@ def post_order(request):
     request_tem = {
             "table_number": form.cleaned_data['table'],
             "items": [],
-            "status": "null"}
+            "status": "PEND"}
+    items = json.loads(items)["items"]
     for item in items:
         for key, value in item.items():
             request_tem["items"].append({'meal':key,'quantity':value.get('quantity',1)})
     url = request.build_absolute_uri(
-    reverse('orders:meal-detail'))
-    req = requests.post(url, data=request_tem)
+    reverse('orders:order-list'))
+    logger.error(request_tem)
+    req = requests.post(url, json=request_tem)
     if req.status_code != 201:
         return render(
             request,
             'error/error.html',
-            {'status': 400, 'message': req.text})
+            {'status': req.status_code, 'message': req.text})
 
     # Сохраняем id заказа и Удаляем корзину
     orders = request.COOKIES.get('orders', json.dumps([]))
     orders = json.loads(orders).append(req.json().get('id'))
-    response = HttpResponseRedirect(reverse('frontend:detail'))
+    response = HttpResponseRedirect(reverse('frontend:order_detail', kwargs={'order_id': req.json().get('id')}))
     response.set_cookie('orders', json.dumps(orders))
     response.delete_cookie('basket')
     return response
