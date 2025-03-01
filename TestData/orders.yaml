@@ -1,0 +1,135 @@
+orders:
+  - table_number: 1
+    status: "PEND"
+    items:
+      - name: "Бургер с говядиной"
+        quantity: 2
+      - name: "Кофе эспрессо"
+        quantity: 1
+  - table_number: 2
+    status: "INPR"
+    items:
+      - name: "Куриный сэндвич"
+        quantity: 3
+      - name: "Капучино"
+        quantity: 2
+  - table_number: 3
+    status: "PEND"
+    items:
+      - name: "Пицца Маргарита"
+        quantity: 1
+      - name: "Латте"
+        quantity: 1
+  - table_number: 4
+    status: "COMP"
+    items:
+      - name: "Паста Карбонара"
+        quantity: 2
+      - name: "Чай зелёный"
+        quantity: 1
+  - table_number: 5
+    status: "CANC"
+    items:
+      - name: "Салат Цезарь"
+        quantity: 1
+      - name: "Фраппучино"
+        quantity: 1
+  - table_number: 6
+    status: "PAID"
+    items:
+      - name: "Суп из брокколи"
+        quantity: 1
+      - name: "Чай черный"
+        quantity: 1
+  - table_number: 7
+    status: "PEND"
+    items:
+      - name: "Суп-пюре из тыквы"
+        quantity: 1
+      - name: "Кофе эспрессо"
+        quantity: 2
+  - table_number: 8
+    status: "INPR"
+    items:
+      - name: "Греческий салат"
+        quantity: 1
+      - name: "Молочный коктейль"
+        quantity: 1
+  - table_number: 9
+    status: "PEND"
+    items:
+      - name: "Чизкейк"
+        quantity: 2
+  - table_number: 10
+    status: "PAID"
+    items:
+      - name: "Тирамису"
+        quantity: 1
+      - name: "Капучино"
+        quantity: 1
+  - table_number: 11
+    status: "CANC"
+    items:
+      - name: "Пицца Маргарита"
+        quantity: 2
+      - name: "Латте"
+        quantity: 1
+  - table_number: 12
+    status: "INPR"
+    items:
+      - name: "Шоколадный мусс"
+        quantity: 1
+  - table_number: 13
+    status: "PEND"
+    items:
+      - name: "Фрукты ассорти"
+        quantity: 1
+  - table_number: 14
+    status: "PAID"
+    items:
+      - name: "Паста Карбонара"
+        quantity: 2
+      - name: "Кофе эспрессо"
+        quantity: 1
+  - table_number: 15
+    status: "PEND"
+    items:
+      - name: "Бургер с говядиной"
+        quantity: 1
+      - name: "Фраппучино"
+        quantity: 1
+  - table_number: 16
+    status: "INPR"
+    items:
+      - name: "Куриный сэндвич"
+        quantity: 1
+      - name: "Капучино"
+        quantity: 2
+  - table_number: 17
+    status: "PAID"
+    items:
+      - name: "Пицца Маргарита"
+        quantity: 1
+      - name: "Чай черный"
+        quantity: 1
+  - table_number: 18
+    status: "PEND"
+    items:
+      - name: "Греческий салат"
+        quantity: 1
+      - name: "Латте"
+        quantity: 2
+  - table_number: 19
+    status: "CANC"
+    items:
+      - name: "Салат Цезарь"
+        quantity: 1
+      - name: "Молочный коктейль"
+        quantity: 1
+  - table_number: 20
+    status: "PAID"
+    items:
+      - name: "Суп из брокколи"
+        quantity: 1
+      - name: "Фраппучино"
+        quantity: 2
