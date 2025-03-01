@@ -76,7 +76,7 @@ class OrderSerializer(serializers.ModelSerializer):
     def validate_table_number(self, table_number):
         if table_number is None:
             raise ValidationError(
-                'table_name parameter is required',
+                'table_number parameter is required',
                 code=400)
         return table_number
 
@@ -98,7 +98,9 @@ class OrderSerializer(serializers.ModelSerializer):
         return order
 
     def update(self, instance, validated_data):
-        instance.table_number = self.validate_table_number(validated_data.get('table_number', None))
+        table_number = validated_data.get('table_number', None)
+        if table_number:
+            instance.table_number = self.validate_table_number(table_number)
         instance.status = validated_data.get('status', instance.status)
         instance.save()
 
@@ -109,6 +111,7 @@ class OrderSerializer(serializers.ModelSerializer):
                 order=instance, meal=meal,
                 defaults={'quantity': 1}
             )
+        return instance
     
     def to_representation(self, instance):
         representation = {

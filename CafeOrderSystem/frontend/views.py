@@ -284,8 +284,16 @@ def order_list_view(request):
     return HttpResponseRedirect(reverse('frontend:home'))
 
 
-def order_pay_button(request):
-    return HttpResponseRedirect(reverse('frontend:home'))
+def order_pay_button(request, order_id):
+    order_url = request.build_absolute_uri(reverse('orders:order-detail', kwargs={'pk': order_id}))
+    req = requests.patch(order_url, json={'status':'PAID'})
+    if req.status_code != 200:
+        return render(
+            request,
+            'error/error.html',
+            {'status': req.status_code, 'message': req.text})
+
+    return HttpResponseRedirect(reverse('frontend:order_detail',kwargs={'order_id': order_id}))
 
 
 def order_canc_button(request):
