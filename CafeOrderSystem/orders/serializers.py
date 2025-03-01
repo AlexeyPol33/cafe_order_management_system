@@ -131,6 +131,7 @@ class OrderSerializer(serializers.ModelSerializer):
             items_representation.append(meal_data)
             representation['total_price'] += float(meal_data['price']) * int(order_meal.quantity)
             representation['total_quantity'] += int(order_meal.quantity)
+            representation['total_price'] = round(representation['total_price'],2)
         
         representation['items'] = items_representation
         return representation

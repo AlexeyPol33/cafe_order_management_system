@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from .forms import OrderPostForm, SearchForm
+from django.utils.dateparse import parse_date
 
 logger = logging.getLogger('main')
 order_template = {
@@ -71,7 +72,7 @@ def basket(request):
         request=request,
         template_name='order/basket.html',
         context={'items': items,
-                 'total_price': total_price,
+                 'total_price': round(total_price, 2),
                  'total_quantity': total_quantity,
                  'form': OrderPostForm()})
 
@@ -213,7 +214,8 @@ def post_order(request):
 
     # Сохраняем id заказа и Удаляем корзину
     orders = request.COOKIES.get('orders', json.dumps([]))
-    orders = json.loads(orders).append(req.json().get('id'))
+    orders = json.loads(orders) or [] 
+    orders.append(req.json().get('id'))
     response = HttpResponseRedirect(reverse('frontend:order_detail', kwargs={'order_id': req.json().get('id')}))
     response.set_cookie('orders', json.dumps(orders))
     response.delete_cookie('basket')
@@ -267,12 +269,6 @@ def oreder_detail_view(request, order_id:int):
         )
     else:
         order = order.json()
-        order['total_price'] = 0
-        order['total_quantity'] = 0
-    items = order.get("items", [])
-    for item in items:
-        order['total_price'] += float(item['price']) * float(item['quantity'])
-        order['total_quantity'] += int(item['quantity'])
 
     return render(
         request,
@@ -280,8 +276,8 @@ def oreder_detail_view(request, order_id:int):
         context={'order':order})
 
 
-def order_list_view(request):
-    return HttpResponseRedirect(reverse('frontend:home'))
+def order_list_view(request):# todo
+    return HttpResponseRedirect(reverse('frontend:order_list_one_line'))
 
 
 def order_pay_button(request, order_id):
@@ -296,19 +292,47 @@ def order_pay_button(request, order_id):
     return HttpResponseRedirect(reverse('frontend:order_detail',kwargs={'order_id': order_id}))
 
 
-def order_canc_button(request):
-    return HttpResponseRedirect(reverse('frontend:home'))
+def order_canc_button(request, order_id):
+    order_url = request.build_absolute_uri(reverse('orders:order-detail', kwargs={'pk': order_id}))
+    req = requests.patch(order_url, json={'status':'CANC'})
+    if req.status_code != 200:
+        return render(
+            request,
+            'error/error.html',
+            {'status': req.status_code, 'message': req.text})
+
+    return HttpResponseRedirect(reverse('frontend:order_detail',kwargs={'order_id': order_id}))
 
 
 def management_menu_view(request):
-
     return render(
         request,
         'management\menu.html')
-    
+
 
 def management_report_view(request):
-
+    date_param = request.GET.get('date', None)
+    if date_param:
+        url = request.build_absolute_uri(reverse('orders:order-list'))
+        date = parse_date(date_param)
+        req = requests.get(url + f"?date={date}")
+        if req.status_code != 200:
+            return render(
+                request,
+                'error/error.html',
+                {'status': req.status_code, 'message': req.text})
+        total_prices = 0
+        total_orders = 0
+        for order in req.json():
+            total_orders += 1
+            total_prices += float(order['total_price'])
+        return render(
+            request,
+            'management\\report.html',
+            context={'context':{
+                'date': str(date),
+                'total_orders':total_orders,
+                'total_prices':round(total_prices, 2)}})
     return render(
         request,
-        'management\report.html')
+        'management\\report.html')

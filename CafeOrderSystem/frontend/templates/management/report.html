@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Отчет{% endblock %}
+
+{% block content %}
+<form method="GET" action="{% url 'frontend:management_report' %}">
+    <label for="date">Выберите дату:</label>
+    <input type="date" id="date" name="date" required>
+    <button type="submit">Получить отчет</button>
+    {% if context %}
+        <h1> Результаты за {{ context.date }}:</h1>
+        <strong>Заказы: {{ context.total_orders }}</strong>
+        
+        <strong>Выручка: {{ context.total_prices }}</strong>
+    
+    {% endif %}
+</form>
+{% endblock %}
