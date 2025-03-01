@@ -4,7 +4,7 @@ import logging
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from .forms import OrderPostForm
+from .forms import OrderPostForm, SearchForm
 
 logger = logging.getLogger('main')
 order_template = {
@@ -219,13 +219,25 @@ def post_order(request):
 
 def order_list_one_line_view(request):
     orders_url = request.build_absolute_uri(reverse('orders:order-list'))
-    form = None
-    query = None
+    form = form = SearchForm()
     orders = []
 
     if 'query' in request.GET:
-        #form = SearchForm(request.GET)
-        pass
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            req = requests.get(orders_url + f'?search={query}')
+            if req.status_code != 200:
+                return render(
+                    request,
+                    'error/error.html',
+                    {'status': req.status_code, 'message': req.text})
+            orders = req.json()
+        else:
+            return render(
+                    request,
+                    'error/error.html',
+                    {'status': 400, 'message': "Не корректные данные поиска"})
     else:
         req = requests.get(orders_url)
         if req.status_code != 200:

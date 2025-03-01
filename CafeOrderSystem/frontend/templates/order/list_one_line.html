@@ -4,13 +4,15 @@
 
 {% block content %}
     <h1>Заказы</h1>
+    {% include "order/includes/order_search_form.html" %}
     {% for order in context %}
     <p>
         <a href="{% url 'frontend:order_detail' order.id %}">
-            Заказ №{{ order.id }}
-            Стол №{{ order.table_number }}
-            Сумма {{ order.total_price }}
-            Количество {{ order.total_quantity }}
+            Заказ: №{{ order.id }} 
+            Стол: №{{ order.table_number }} 
+            Сумма: {{ order.total_price }} 
+            Количество: {{ order.total_quantity }} 
+            Статус: {% include "order/includes/order_status.html" %}
         </a>
     </p>
     {% endfor %}
