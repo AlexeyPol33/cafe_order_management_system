@@ -319,7 +319,7 @@ def order_del_button(request, order_id):
 def management_menu_view(request):
     return render(
         request,
-        'management\menu.html')
+        'management/menu.html')
 
 def management_report_view(request):
     date_param = request.GET.get('date', None)
@@ -339,14 +339,14 @@ def management_report_view(request):
             total_prices += float(order['total_price'])
         return render(
             request,
-            'management\\report.html',
+            'management/report.html',
             context={'context':{
                 'date': str(date),
                 'total_orders':total_orders,
                 'total_prices':round(total_prices, 2)}})
     return render(
         request,
-        'management\\report.html')
+        'management/report.html')
 
 
 def management_order_detail_view(request,order_id=None):
@@ -368,5 +368,5 @@ def management_order_detail_view(request,order_id=None):
 
     return render(
         request,
-        'management\order_management.html',
+        'management/order_management.html',
         context={'order':order})

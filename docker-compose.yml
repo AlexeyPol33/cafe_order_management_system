@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  django:
+    build: .
+    container_name: django_app
+    depends_on:
+      - postgredb
+    ports:
+      - "8000:8000"
+    environment:
+      DEBUG: "0"
+      DB_ENGINE: "django.db.backends.postgresql"
+      DB_NAME: "postgres_basic"
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+      DB_HOST: "postgredb"
+      DB_PORT: "5432"
+    volumes:
+      - .:/app
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py load_meals --file=../TestData/meals.yaml &&
+             python manage.py runserver 0.0.0.0:8000"
+  
+  postgredb:
+    image: postgres:13
+    container_name: postgresql_db
+    restart: always
+    environment:
+      POSTGRES_DB: "postgres_basic"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
