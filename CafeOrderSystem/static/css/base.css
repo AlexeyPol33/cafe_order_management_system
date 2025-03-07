@@ -1,0 +1,237 @@
+
+head {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #FDF4E3
+}
+
+header {
+    background-color: #FDF4E3;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: stretch;
+}
+
+.logo img {
+    max-width: 150px;
+    height: auto;
+}
+
+nav ul {
+    list-style: none;
+    display: inline-flex;
+    height: auto;
+    gap: 20px;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    color: #321f11;
+    text-decoration: none;
+    font-size: 25px;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+.content{
+    color: #321f11;
+    float:left;
+    width:60%;
+    padding: 50px; 
+}
+
+a {
+    color: #321f11;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: rgb(238, 84, 13);
+    text-decoration: underline;
+    transition: 0.3s;
+}
+.basket_total_values {
+    color: #321f11;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+.basket_add_button {
+    display: inline-block;
+    background-color: #6f4e37;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.basket_add_button:hover {
+    background-color: #37586f;
+    transform: scale(1.05);
+}
+
+.basket_add_button:active {
+    background-color: #6f4e37;
+    transform: scale(0.95);
+}
+
+.basket_del_button {
+    display: inline-block;
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.basket_del_button:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+.basket_del_button:active {
+    background-color: #a71d2a;
+    transform: scale(0.95);
+}
+
+.order_post_form_container {
+    color: #321f11;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.order_post_form_container input {
+    width: 80px;
+    height: 30px;
+    font-size: 18px;
+    padding: 10px;
+    border: 2px solid #6f4e37;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.order_post_form_button {
+    display: inline-block;
+    background-color: #120a8f;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.order_post_form_button:hover {
+    background-color: #352a7f;
+    transform: scale(1.05);
+}
+
+.order_post_form_button:active {
+    background-color: #436d49;
+    transform: scale(0.95);
+}
+/* Поиск */
+.search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    flex: 1;
+    outline: none;
+}
+
+.search-btn {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.search-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Управление */
+.admin-menu {
+    width: 200px;
+    background-color: #6f4e37;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-menu li {
+    margin-bottom: 15px;
+}
+
+.admin-menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px;
+    display: block;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.admin-menu a:hover {
+    background-color: #34495e;
+}
