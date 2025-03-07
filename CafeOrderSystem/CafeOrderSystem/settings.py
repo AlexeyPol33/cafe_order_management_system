@@ -22,7 +22,8 @@ INSTALLED_APPS = [
     'orders',
     'frontend',
     'users',
-
+    'users_front',
+    
 ]
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
