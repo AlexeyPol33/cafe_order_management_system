@@ -15,7 +15,7 @@ def registration_view(request):
     form = None
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
-        if not form.is_valid:
+        if not form.is_valid():
             return render(
                 request,
                 'error/error.html', # TODO Добавить шаблон ошибки
@@ -38,31 +38,31 @@ def registration_view(request):
                 'error':'Пароли не совпадают'})
     
     # Запрос к внутреннему api: создание нового пользователя
-    url = reverse('users:users-list')
+    url = request.build_absolute_uri(reverse('users:users-list'))
     req_data = {
         'username':form_data['username'],
         'password':form_data['password'],
         'is_active': True}
     req = requests.post(url, json=req_data)
-    if req != 201:
+    if req.status_code != 201:
         return render(
             request,
             'error/error.html', # TODO Добавить шаблон ошибки
-            {'status':400,
+            {'status':req.status_code,
              'message': req.text},
             status=400)
-    
+
     # Запрос к внутреннему api: выпуск токенов
-    url = reverse('users:token_obtain_pair')
+    url = request.build_absolute_uri(reverse('users:token_obtain_pair'))
     req_data = {
         "username": form_data['username'],
         "password": form_data['password']}
     req = requests.post(url, json=req_data)
-    if req != 201:
+    if req.status_code != 200:
         return render(
             request,
             'error/error.html', # TODO Добавить шаблон ошибки
-            {'status':500,
+            {'status':req.status_code,
              'message': req.text},
             status=500)
     req = req.json()
