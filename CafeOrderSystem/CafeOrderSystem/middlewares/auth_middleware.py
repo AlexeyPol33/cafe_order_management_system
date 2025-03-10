@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from django.core.exceptions import ValidationError
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect
 
 
 User = get_user_model()
@@ -16,7 +16,9 @@ class AuthMiddleware(MiddlewareMixin):
         if not access_token and refresh_token:
             try:
                 new_access_token = str(RefreshToken(refresh_token).access_token)
-                response = JsonResponse({'detail': 'access token refreshed'})
+                response = HttpResponseRedirect(
+                    request.build_absolute_uri()
+                )
                 response.set_cookie(
                     key="access_token",
                     value=new_access_token,

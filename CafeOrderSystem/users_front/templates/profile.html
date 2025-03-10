@@ -1,0 +1,8 @@
+{% extends "base.html"  %}
+
+{% block title %}Профиль{% endblock %}
+{% block content %}
+<h1>Добро пожаловать, {{ user.username }}</h1>
+<strong>Имя: {{ user.username }}</strong>
+<strong>Активность: {{ user.is_active }}</strong>
+{% endblock %}
