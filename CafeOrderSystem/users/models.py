@@ -5,6 +5,13 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils.translation import gettext_lazy as _
 
 
+class Roles(models.TextChoices):
+    CLIENT = 'CL', 'Клиент'
+    COOK = 'CK', 'Повар'
+    WAITER = 'WT', 'Официант'
+    SUPERUSER = 'SU', 'Админ'
+
+
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -27,7 +34,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-
+        extra_fields.setdefault('role', 'SU')
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
         if extra_fields.get('is_superuser') is not True:
@@ -49,6 +56,10 @@ class User(AbstractUser):
     objects = UserManager()
     USERNAME_FIELD = 'username'
     username_validator = UnicodeUsernameValidator()
+    role = models.CharField(
+        max_length=2,
+        choices=Roles.choices,
+        default=Roles.CLIENT)
     username = models.CharField(
         _('username'),
         max_length=200,

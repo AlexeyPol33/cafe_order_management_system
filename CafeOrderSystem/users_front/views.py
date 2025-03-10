@@ -35,7 +35,7 @@ def login_view(request):
     else:
         return render(
             request=request,
-            template_name='registration.html',
+            template_name='login.html',
             context={'form': LoginForm()})
     form_data = form.cleaned_data
 
