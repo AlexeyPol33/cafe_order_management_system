@@ -2,10 +2,10 @@ import requests
 from django.shortcuts import render
 from .forms import RegistrationForm, LoginForm
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 
 
-def profile(request):
+def profile_view(request):
     user = request.user
     if not user.is_authenticated:
         return HttpResponseRedirect(reverse('users_front:login'))
@@ -16,6 +16,15 @@ def profile(request):
             {'user':user}
         )
 
+def logout(request):
+    user = request.user
+    print(request.method)
+    if user.is_authenticated and request.method == 'DELETE':
+        response = HttpResponseRedirect(reverse('users_front:login'))
+        response.delete_cookie('access_token')
+        response.delete_cookie('refresh_token')
+        return response
+    return HttpResponse(status = 204)
 
 def login_view(request):
 

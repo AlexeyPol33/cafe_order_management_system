@@ -6,5 +6,22 @@
 <strong>Имя: {{ user.username }}</strong>
 <strong>Активность: {{ user.is_active }}</strong>
 <strong>Роль: {{ user.role }}</strong>
-
+<form id="logout-form">
+    {% csrf_token %}
+    <button type="button" class="logout_button" onclick="logoutUser()">ВЫЙТИ</button>
+</form>
+<script>
+    function logoutUser() {
+        fetch("{% url 'users_front:logout' %}", {
+            method: "DELETE",
+            headers: {
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+            }
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = "/";
+            }
+        });
+    }
+</script>
 {% endblock %}
