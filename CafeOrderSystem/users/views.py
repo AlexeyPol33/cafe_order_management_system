@@ -1,8 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser, AllowAny
-from permissions import isAccountOwnerPermission
-from serializers import UserSerializer
-from models import User
+from .permissions import isAccountOwnerPermission
+from .serializers import UserSerializer
+from .models import User
 
 
 

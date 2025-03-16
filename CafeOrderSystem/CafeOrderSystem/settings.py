@@ -1,5 +1,7 @@
 import os
 from pathlib import Path
+from datetime import timedelta
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,10 +24,12 @@ INSTALLED_APPS = [
     'orders',
     'frontend',
     'users',
-
+    'users_front',
+    
 ]
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
 }
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -35,6 +39,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'CafeOrderSystem.middlewares.auth_middleware.AuthMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'CafeOrderSystem.urls'
@@ -42,7 +48,7 @@ ROOT_URLCONF = 'CafeOrderSystem.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -56,8 +62,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'CafeOrderSystem.wsgi.application'
-
-AUTH_USER_MODEL = 'users.User'
 
 if DEBUG:
     DATABASES = {
@@ -93,6 +97,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    'TOKEN_OBTAIN_SERIALIZER': 'users.serializers.ObtainTokenSerializer',}
+
+AUTH_USER_MODEL = 'users.User'
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -102,6 +112,12 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

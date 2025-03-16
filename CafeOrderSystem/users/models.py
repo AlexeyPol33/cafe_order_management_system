@@ -5,32 +5,42 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils.translation import gettext_lazy as _
 
 
+class Roles(models.TextChoices):
+    CLIENT = 'CL', 'Клиент'
+    COOK = 'CK', 'Повар'
+    WAITER = 'WT', 'Официант'
+    SUPERUSER = 'SU', 'Админ'
+
+
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def _create_user(self, password, **extra_fields):
 
-        username = extra_fields.get('username')
+        username = extra_fields.pop('username', None)
+        if not username:
+            raise ValueError("The given username must be set")
+        
         user = self.model(username=username, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, password, **extra_fields)
+        return self._create_user(password, **extra_fields)
 
-    def create_superuser(self, email, password, **extra_fields):
+    def create_superuser(self, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-
+        extra_fields.setdefault('role', 'SU')
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self._create_user(email, password, **extra_fields)
+        return self._create_user(password, **extra_fields)
 
 
 class User(AbstractUser):
@@ -46,6 +56,10 @@ class User(AbstractUser):
     objects = UserManager()
     USERNAME_FIELD = 'username'
     username_validator = UnicodeUsernameValidator()
+    role = models.CharField(
+        max_length=2,
+        choices=Roles.choices,
+        default=Roles.CLIENT)
     username = models.CharField(
         _('username'),
         max_length=200,
